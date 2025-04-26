@@ -1,10 +1,10 @@
 {
   "name": "ai-agent-backend",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "src/index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "nodemon src/index.js"
   },
   "dependencies": {
     "axios": "^1.6.7",
