@@ -46,14 +46,37 @@ function renderAgentDropdown(agents, activeAgent, onAgentSwitch) {
   );
 }
 
+// Render mode dropdown
+function renderModeDropdown(modes, activeMode, onModeSwitch) {
+  if (!Array.isArray(modes)) return null;
+  return (
+    <div className="sidebar__section">
+      <div className="sidebar__label">Chat Mode</div>
+      <select
+        className="sidebar__agent-select" // Reuse the same styling
+        value={activeMode}
+        onChange={e => onModeSwitch(e.target.value)}
+        aria-label="Select chat mode"
+      >
+        {modes.map(mode => (
+          <option value={mode} key={mode}>{mode.charAt(0).toUpperCase() + mode.slice(1)}</option>
+        ))}
+      </select>
+    </div>
+  );
+}
+
 const Sidebar = ({
-  sessions,
-  activeSession,
-  onSessionSelect,
-  onNewSession,
-  agents,
-  activeAgent,
-  onAgentSwitch
+  sessions = [],
+  activeSession = '',
+  onSessionSelect = () => {},
+  onNewSession = () => {},
+  agents = [],
+  activeAgent = '',
+  onAgentSwitch = () => {},
+  modes = ['general', 'creative', 'code'], // New prop for modes
+  activeMode = 'general', // New prop for active mode
+  onModeSwitch = () => {} // New prop for mode switch handler
 }) => (
   <nav className="sidebar" aria-label="Chat Sessions Sidebar">
     <div className="sidebar__header">
@@ -69,6 +92,7 @@ const Sidebar = ({
     </div>
     {renderSessionsList(sessions, activeSession, onSessionSelect)}
     {renderAgentDropdown(agents, activeAgent, onAgentSwitch)}
+    {renderModeDropdown(modes, activeMode, onModeSwitch)} {/* Add mode dropdown */}
   </nav>
 );
 
@@ -79,16 +103,10 @@ Sidebar.propTypes = {
   onNewSession: PropTypes.func,
   agents: PropTypes.arrayOf(PropTypes.string),
   activeAgent: PropTypes.string,
-  onAgentSwitch: PropTypes.func
-};
-Sidebar.defaultProps = {
-  sessions: [],
-  agents: [],
-  activeSession: '',
-  activeAgent: '',
-  onSessionSelect: () => {},
-  onNewSession: () => {},
-  onAgentSwitch: () => {}
+  onAgentSwitch: PropTypes.func,
+  modes: PropTypes.arrayOf(PropTypes.string), // New prop type
+  activeMode: PropTypes.string, // New prop type
+  onModeSwitch: PropTypes.func // New prop type
 };
 
 export default Sidebar;

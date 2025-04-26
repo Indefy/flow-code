@@ -187,7 +187,7 @@ body {
   border-radius: 6px;
 }
 .markdown-body strong {
-  color: #fff;
+  color: #181c2a;
 }
 .markdown-body em {
   color: #b5c7f8;
@@ -215,7 +215,7 @@ body {
 .messages {
   flex: 1 1 auto;
   min-height: 380px;
-  max-height: 500px;
+  max-height: 90%;
   overflow-y: auto;
   padding: 28px 38px 16px 38px;
   display: flex;

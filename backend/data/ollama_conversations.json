@@ -16,5 +16,25 @@
         "emotion": "neutral"
       }
     ]
+  },
+  {
+    "id": "bf5bbd62-75e5-4d5a-8fee-f2945a63c172",
+    "messages": [
+      {
+        "role": "user",
+        "content": "hi"
+      },
+      {
+        "role": "assistant",
+        "content": "Hello! How can I help you today?"
+      }
+    ],
+    "sentimentHistory": [
+      {
+        "polarity": 0,
+        "emotion": "neutral",
+        "confidence": 0
+      }
+    ]
   }
 ]
