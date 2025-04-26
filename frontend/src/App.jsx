@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { logAgentEvent } from './logAgentEvent';
 import './styles/index.css';
 import AgentThoughtsPanel from './components/AgentThoughtsPanel';
 import Message from './components/Message';
@@ -69,6 +70,7 @@ function App() {
       const reader = res.body.getReader();
       let done = false;
       let buffer = '';
+      let lastLoggedAIText = '';
       while (!done) {
         const { value, done: streamDone } = await reader.read();
         done = streamDone;
@@ -96,14 +98,23 @@ function App() {
                     }
                     return [...msgs, { role: 'ai', text: aiText }];
                   });
+                  lastLoggedAIText = aiText; // For logging at end
+                  // Log streamed AI response chunk (optional, only log on '[DONE]' for full response)
+                  logAgentEvent('response', aiText, { agent: activeAgent, session: activeSession, userMessage: input });
                 }
                 if (data.thoughts && data.thoughts.length) {
                   newThoughts = [...newThoughts, ...data.thoughts];
                   setThoughts(prev => [...prev, ...data.thoughts]);
+                  // Log thoughts as they arrive
+                  for (const thought of data.thoughts) {
+                    logAgentEvent('thought', thought, { agent: activeAgent, session: activeSession });
+                  }
                 }
                 if (data.content === '[DONE]') {
                   // Save session and conversationId
                   setSessions(sessions => sessions.map(s => s.id === activeSession ? { ...s, messages: [...messages, { role: 'user', text: input }, { role: 'ai', text: aiText }], conversationId: data.conversationId } : s));
+                  // Log the complete AI response at the end
+                  logAgentEvent('response', lastLoggedAIText, { agent: activeAgent, session: activeSession, userMessage: input });
                   break;
                 }
               } catch {}
