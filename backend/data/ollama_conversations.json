@@ -1,0 +1,20 @@
+[
+  {
+    "id": "3a2a2400-75ed-4739-8e5b-c6970e7f5941",
+    "messages": [
+      {
+        "role": "user",
+        "content": "Lets improve this index.js: \"import express from 'express';\nimport cors from 'cors';\nimport dotenv from 'dotenv';\n\ndotenv.config();\n\nconst app = express();\napp.use(cors());\napp.use(express.json());\n\n// Health check\napp.get('/api/health', (req, res) => {\n  res.json({ status: 'ok' });\n});\n\nimport { chatWithOllama } from './services/ollama.js';\n\n// Chat endpoint: forwards user message to Ollama\napp.post('/api/chat', async (req, res) => {\n  const { message, mode, conversationId, userPrefs } = req.body;\n  if (!message) {\n    return res.status(400).json({ error: 'Missing message' });\n  }\n  try {\n    const response = await chatWithOllama(message, mode, conversationId, userPrefs);\n    res.json({ \n      reply: response.reply, \n      thoughts: response.thoughts,\n      conversationId: response.conversationId,\n      sentiment: response.sentiment\n    });\n  } catch (err) {\n    console.error('Ollama error:', {\n      message: err.message,\n      code: err.code,\n      responseData: err.response?.data,\n      stack: err.stack,\n    });\n    res.status(500).json({ error: 'Failed to communicate with Ollama', details: err.response?.data || err.message });\n  }\n});\n\nconst PORT = process.env.PORT || 3001;\napp.listen(PORT, () => {\n  console.log(`Backend server running on port ${PORT}`);\n});\n\"."
+      },
+      {
+        "role": "assistant"
+      }
+    ],
+    "sentimentHistory": [
+      {
+        "polarity": 0,
+        "emotion": "neutral"
+      }
+    ]
+  }
+]
