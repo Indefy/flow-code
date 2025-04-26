@@ -17,13 +17,18 @@ import { chatWithOllama } from './services/ollama.js';
 
 // Chat endpoint: forwards user message to Ollama
 app.post('/api/chat', async (req, res) => {
-  const { message, mode } = req.body;
+  const { message, mode, conversationId, userPrefs } = req.body;
   if (!message) {
     return res.status(400).json({ error: 'Missing message' });
   }
   try {
-    const { reply, thoughts } = await chatWithOllama(message, mode);
-    res.json({ reply, thoughts });
+    const response = await chatWithOllama(message, mode, conversationId, userPrefs);
+    res.json({ 
+      reply: response.reply, 
+      thoughts: response.thoughts,
+      conversationId: response.conversationId,
+      sentiment: response.sentiment
+    });
   } catch (err) {
     console.error('Ollama error:', {
       message: err.message,
